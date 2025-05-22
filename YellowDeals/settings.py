@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key-if-not-set')
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['yellowdeals01-xe5r.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
