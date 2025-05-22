@@ -1,0 +1,148 @@
+{% extends 'baseShop.html' %}
+
+{% block title %}Yellow Deals{% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+    .body {
+        overflow-y: scroll;        /* ให้เลื่อนตามเนื้อหา */
+        scrollbar-width: none;     /* ซ่อน scrollbar (สำหรับ Firefox) */
+    }
+    
+    body::-webkit-scrollbar {
+        display: none;             /* ซ่อน scrollbar (สำหรับ Chrome, Safari) */
+    }
+    .custom-container {
+        border-radius: 10px;
+        background-color: #fff;
+        padding: 20px 30px;
+        border: 5px solid rgba(0, 0, 0, 0.79);
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin: 30px auto 30px;
+        width: 850px;
+    }
+
+
+    .btn-edit {
+        display: block;
+        margin: 0 auto;
+        margin-top: 30px;
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: #fff;
+        border: 2px solid #DDD0C8;
+        border-radius: 30px;
+        padding: 10px 25px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+    }
+
+    .custom-btn {
+        border-radius: 50px !important; /* ทำให้ปุ่มกลม */
+        border: 1.5px solid #000 !important; /* ขอบดำ */
+        padding: 8px 20px !important;
+        font-weight: 500;
+    }
+
+    .store-img {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+</style>
+<div class="container mt-4">
+    <div class="custom-container shadow-sm p-4 position-relative d-flex flex-column flex-md-row">
+        
+        <!-- รูปร้านค้า -->
+        <div class="store-image me-md-4 text-center">
+            {% if store_owner.store_image_url %}
+                <img src="{{ store_owner.store_image_url.url }}" alt="Store Image" class="store-img rounded-circle">
+            {% else %}
+                <img src="{% static 'images/Default1.png' %}" alt="Default Image" class="store-img rounded-circle">
+            {% endif %}
+        </div>
+
+        <!-- ข้อมูลร้านค้า -->
+        <div class="flex-grow-1">
+            <!-- ปุ่มมุมขวา -->
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{% url 'store_profile_edit' %}" class="btn custom-btn btn-warning me-2">แก้ไข</a>
+                <button class="btn custom-btn btn-danger" onclick="confirmDelete()">ลบบัญชี</button>
+            </div>
+
+            <!-- ชื่อและประเภทร้าน -->
+            <h2 class="fw-bold">{{ store_owner.store_name }}</h2>
+            <h5 class="text-muted">{{ store_owner.typeStore.typeStore_name }}</h5>
+            <h5 class="border-bottom pb-2 mb-3"></h5>
+
+            <!-- ช่องทางติดต่อ -->
+            <h5><strong><u>ช่องทางติดต่อ</u></strong></h5>
+            <div class="ps-2 mb-4" style="font-size: 1.1rem;">
+                <p class="mb-1"><strong>เบอร์โทรศัพท์:</strong>
+                    {{ store_owner.store_tel|slice:":3" }}-{{ store_owner.store_tel|slice:"3:6" }}-{{ store_owner.store_tel|slice:"6:" }}
+                </p>
+                <p class="mb-1"><strong>อีเมล:</strong> {{ store_owner.store_email }}</p>
+                <p class="mb-0"><strong>ที่อยู่:</strong> {{ store_owner.store_address }}</p>
+            </div>
+
+            <!-- แผนที่ -->
+            {% if store_owner.latitude and store_owner.longitude %}
+                <h5><strong><u>Google Map</u></strong></h5>
+                <div>
+                    <iframe
+                        width="100%"
+                        height="300"
+                        style="border-radius: 15px;"
+                        frameborder="0"
+                        scrolling="no"
+                        marginheight="0"
+                        marginwidth="0"
+                        src="https://maps.google.com/maps?q={{ store_owner.latitude }},{{ store_owner.longitude }}&hl=th&z=16&output=embed">
+                    </iframe>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'สำเร็จ!',
+                text: '{{ message }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'ตกลง'
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+<script>
+    function confirmDelete() {
+        const nextUrl = encodeURIComponent(window.location.pathname);
+        Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: "เมื่อลบแล้วจะไม่สามารถกู้คืนได้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{% url 'store_delete_account' %}?next=" + nextUrl;
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'baseAdmin.html' %}
+
+{% block title %} Yellow Deals{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between" style="margin-top: 80px;">
+        <div class="card text-center p-4 shadow" style="width: 32%; background-color: white; border-radius: 50px; min-height: 350px; margin: 0 30px; display: flex; flex-direction: column; justify-content: center;border: 8px  solid #192024;">
+            <p style="font-size: 20px; margin-top: 20px;">
+                ตรวจสอบคำขอสมัครร้านค้าใหม่จากผู้ประกอบการ พร้อมอนุมัติหรือปฏิเสธคำขอตามความเหมาะสม เพื่อให้ร้านค้าที่เข้าร่วมระบบมีคุณภาพและมาตรฐานที่เชื่อถือได้
+            </p>
+            <a href="{% url 'admin_ManageRequests' %}" class="btn btn-warning custom-btn mt-auto mx-auto">จัดการคำขอ</a>
+        </div>
+        <div class="card text-center p-4 shadow" style="width: 32%; background-color: white; border-radius: 50px; min-height: 350px; margin: 0 30px; display: flex; flex-direction: column; justify-content: center;border: 8px solid #192024;">
+            <p style="font-size: 20px; margin-top: 20px;">
+                จัดการและตรวจสอบปัญหาหรือข้อร้องเรียนจากลูกค้า เช่น ความไม่พึงพอใจเกี่ยวกับร้านค้า การบริการ เพื่อรักษาคุณภาพการให้บริการอย่างต่อเนื่อง
+            </p>
+            <a href="{% url 'admin_complaints' %}" class="btn btn-warning custom-btn mt-auto mx-auto">ตรวจสอบคำร้องเรียน</a>
+        </div>
+        <div class="card text-center p-4 shadow" style="width: 32%; background-color: white; border-radius: 50px; min-height: 350px; margin: 0 30px; display: flex; flex-direction: column; justify-content: center;border: 8px  solid #192024;">
+            <p style="font-size:20px; margin-top: 20px;">
+                ตรวจสอบข้อมูลร้านค้าที่ได้รับอนุมัติแล้ว พร้อมควบคุมและจัดการสิทธิ์การใช้งาน เช่น สถานะการดำเนินงานให้เหมาะสม พร้อมทั้งระบุสาเหตุ
+            </p>
+            <a href="{% url 'admin_shops' %}" class="btn btn-warning custom-btn mt-auto mx-auto">ตรวจสอบร้านค้า</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.custom-btn {
+    background-color: #FFD700;
+    border: none;
+    color: black;
+    padding: 6px 30px;
+    transition: 0.3s;
+    font-weight: bold;
+    border-radius: 50px;
+    border: 2px  solid #000;
+}
+.custom-btn:hover {
+    background-color: #FFC107;
+    color: white;
+    border: 2px  solid #000;
+}
+.card p {
+    font-size: 16px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+</style>
+{% endblock %}

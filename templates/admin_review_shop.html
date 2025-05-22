@@ -1,0 +1,163 @@
+{% extends 'baseAdmin.html' %}
+
+{% block title %}Yellow Deals{% endblock %}
+
+{% block content %}
+<style>
+    .body {
+        overflow-y: scroll;        /* ให้เลื่อนตามเนื้อหา */
+        scrollbar-width: none;     /* ซ่อน scrollbar (สำหรับ Firefox) */
+    }
+    
+    body::-webkit-scrollbar {
+        display: none;             /* ซ่อน scrollbar (สำหรับ Chrome, Safari) */
+    }
+        .store-container {
+            max-width: 700px; /* ขยายให้กว้างขึ้น */
+            width: 95%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ccc;
+            
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - 100px); /* ไม่ให้เกินจอ - เผื่อ Navbar + Margin */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+    
+        .store-container::-webkit-scrollbar {
+            display: none;
+        }
+    
+        .store-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .store-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffd700;
+            margin-bottom: 15px;
+        }
+    
+        .store-name {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+        }
+    
+        .status-badge {
+            display: inline-block;
+            padding: 8px 18px;
+            font-size: 16px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+    
+        .pending { background-color: #ffc107; color: black; }
+        .active { background-color: #28a745; color: white; }
+        .banned { background-color: #dc3545; color: white; }
+        .need-info { background-color: #17a2b8; color: white; }
+    
+        .store-info {
+            font-size: 17px;
+            margin-top: 20px;
+        }
+    
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            word-break: break-word;
+            font-size: 16px;
+            min-height: 80px;
+        }
+    
+        .text-center {
+            margin-top: 25px;
+        }
+    
+        .btn-secondary {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+    
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr; /* มือถือให้เรียงแนวตั้ง */
+            }
+        }
+    </style>
+    
+    <div class="container">
+    <div class="store-container">
+        <div class="store-header">
+            <img src="{{ store.store_image_url.url }}" alt="รูปภาพร้าน" class="store-image">
+            <div class="store-name">{{ store.store_name }}</div>
+            <span class="status-badge {% if store.status == 'pending' %}pending
+                                    {% elif store.status == 'active' %}active
+                                    {% elif store.status == 'banned' %}banned
+                                    {% elif store.status == 'need_info' %}need-info{% endif %}">
+                {{ store.get_status_display }}
+            </span>
+        </div>
+    
+        <hr>
+    
+        <div class="store-info">
+            <div class="info-grid">
+                <div class="info-box"><strong>📍 ที่อยู่:</strong> {{ store.store_address }}</div>
+                <div class="info-box"><strong>📞 เบอร์โทร:</strong> {{ store.store_tel }}</div>
+                <div class="info-box"><strong>📧 อีเมล:</strong> {{ store.store_email }}</div>
+                <div class="info-box"><strong>🏢 รหัสสาขา:</strong> {{ store.store_branch|default:"-" }}</div>
+                <div class="info-box"><strong>🗂 ประเภทร้านค้า:</strong> {{ store.typeStore.typeStore_name }}</div>
+                <div class="info-box"><strong>🗓 วันที่ลงทะเบียน:</strong> {{ store.register_date|date:"j F Y" }}</div>
+                <div class="info-box"><strong>⏰ เข้าสู่ระบบล่าสุด:</strong> 
+                    {% if store.last_login %}
+                        {{ store.last_login|date:"j F Y H:i" }} น.
+                    {% else %}
+                        ยังไม่เคยเข้าสู่ระบบ
+                    {% endif %}
+                </div>
+                <div class="info-box"><strong>📌 พิกัด:</strong> 
+                    {% if store.latitude and store.longitude %}
+                        <a href="https://www.google.com/maps?q={{ store.latitude }},{{ store.longitude }}" target="_blank">
+                            ดูบน Google Maps
+                        </a>
+                    {% else %}
+                        ไม่พบพิกัด
+                    {% endif %}
+                </div>
+    
+                {% if store.note %}
+                    <div class="info-box"><strong>📌 หมายเหตุ:</strong> <span style="color: red;">{{ store.note }}</span></div>
+                {% endif %}
+            </div>
+        </div>
+    
+        <hr>
+    
+        <div class="text-center">
+            <a href="{% url 'admin_shops' %}" class="btn btn-secondary">🔙 กลับ</a>
+        </div>
+    </div>
+    </div>
+    {% endblock %}
+    
