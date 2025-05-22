@@ -1,0 +1,183 @@
+{% extends 'baseShop.html' %}
+
+{% block title %} Yellow Deals{% endblock %}
+
+{% block content %}
+<style>
+    .body {
+        overflow-y: scroll;        /* ให้เลื่อนตามเนื้อหา */
+        scrollbar-width: none;     /* ซ่อน scrollbar (สำหรับ Firefox) */
+    }
+    
+    body::-webkit-scrollbar {
+        display: none;             /* ซ่อน scrollbar (สำหรับ Chrome, Safari) */
+    }
+    /* กำหนดกรอบของฟอร์มให้มีขนาดเหมาะสม */
+    .custom-container {
+        border-radius: 10px;
+        background-color: #fff;
+        padding: 20px;
+        border: 5px solid rgba(0, 0, 0, 0.79);
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin: 30px auto; /* เพิ่มระยะห่างจากขอบด้านบน */
+        max-width: 100%; /* ขยายให้ฟอร์มไม่เกินขนาดหน้าจอ */
+        width: 480px; /* กำหนดความกว้างที่เหมาะสม */
+        box-sizing: border-box;
+
+        overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - 100px); /* ไม่ให้เกินจอ - เผื่อ Navbar + Margin */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    /* ปรับปุ่มและช่องกรอกข้อมูล */
+    .form-group {
+        margin-bottom: 20px; /* เพิ่มระยะห่างระหว่างช่องกรอก */
+    }
+form input[type="text"],
+form input[type="number"],
+form textarea,
+form select,
+form input[type="datetime-local"] {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    margin-top: 0.3rem;
+}
+    label {
+        font-size: 18px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+        color: #555;
+    }
+
+    input.form-control {
+        font-size: 16px;
+        padding: 10px;
+        width: 100%; /* ให้ช่องกรอกข้อมูลกว้างเต็ม */
+        max-width: 100%; /* จำกัดไม่ให้เกินขอบหน้าจอ */
+        border: 2px solid #000;
+        border-radius: 8px;
+        margin-bottom: 20px; /* เพิ่มระยะห่างระหว่างฟิลด์ */
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+    /* เปลี่ยนสีของช่องกรอกเมื่อคลิก */
+    input.form-control:focus {
+        border-color: #28a745; 
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); /* เพิ่มเงาเมื่อคลิก */
+    }
+
+    .btn-custom {
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .btn-back {
+        background-color: rgb(169, 33, 6);
+        color: #fff;
+        border: 2px solid #000;
+        padding: 10px 20px;
+        text-decoration: none;
+    }
+
+    .btn-submit {
+        background-color: #28a745;
+        color: #fff;
+        border: 2px solid #000;
+        float: right;
+        padding: 10px 20px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    .btn-submit:disabled {
+        background-color: #ddd;
+        border-color: #ccc;
+        color: #666;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+        border: 2px solid #000;
+        color: #fff;
+    }
+
+    .btn-back:hover {
+        background-color: rgb(88, 23, 10);
+        border: 2px solid #000;
+        color: #fff;
+    }
+
+    /* ทำให้ฟอร์มสามารถตอบสนองต่อขนาดหน้าจอ */
+    @media (max-width: 768px) {
+        .custom-container {
+            width: 90%; /* ทำให้ฟอร์มยืดขยายเต็มหน้าจอในมือถือ */
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="custom-container shadow-sm p-3 mb-4">
+        <h2>เพิ่มสินค้า</h2>
+        <form method="POST" id="product-form" action="?next={{ request.GET.next|default:request.get_full_path }}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="button" id="submitBtn" class="btn btn-submit" onclick="confirmSubmit()" disabled>บันทึก</button>
+            <a href="{{ request.GET.next|default:request.META.HTTP_REFERER }}" class="btn btn-back">ย้อนกลับ</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const formElements = document.getElementById('product-form').elements;
+        let isFormValid = true;
+    
+        for (let i = 0; i < formElements.length; i++) {
+            // ตรวจสอบว่าค่าสำหรับฟอร์มไม่ได้เป็นค่าว่าง และไม่ใช่ปุ่ม
+            if (formElements[i].type !== "button" && formElements[i].type !== "file" && formElements[i].value.trim() === "") {
+                isFormValid = false;
+                break;
+            }
+        }
+    
+        document.getElementById('submitBtn').disabled = !isFormValid;
+    }
+
+    // เรียกใช้ validateForm เมื่อฟอร์มมีการเปลี่ยนแปลง
+    document.getElementById('product-form').addEventListener('input', validateForm);
+
+    function confirmSubmit() {
+        Swal.fire({
+            title: 'คุณแน่ใจไหม?',
+            text: 'คุณต้องการเพิ่มข้อมูลสินค้านี้ใช่หรือไม่?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ใช่, บันทึก',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // หากกด "ใช่, บันทึก" ส่งฟอร์ม
+                document.getElementById('product-form').submit();
+            }
+        });
+    }
+</script>
+{% endblock %}

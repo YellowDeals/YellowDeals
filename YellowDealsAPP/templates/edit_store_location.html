@@ -1,0 +1,154 @@
+{% extends 'baseAdmin.html' %}
+
+{% block title %} Yellow Deals{% endblock %}
+
+{% block content %}
+<style>
+    .custom-container {
+        border-radius: 10px;
+        background-color: #fff;
+        padding: 30px;
+        border: 4px solid #000;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        margin: 40px auto 30px;
+        max-width: 550px;
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .store-name {
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    input.form-control {
+        font-size: 16px;
+        padding: 10px;
+        border: 2px solid #000;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        font-weight: bold;
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-size: 16px;
+        border: 2px solid #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #FFC107;
+        color: #000;
+        margin-right: 10px;
+    }
+
+    .btn-success:hover {
+        background-color: #e2930d;
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background-color: #c62d0e;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #791d0a;
+    }
+
+    .button-group {
+        text-align: right;
+        margin-top: 10px;
+    }
+
+    .store-address {
+    background-color:rgb(180, 207, 235); /* สีพื้นหลังอ่อน */
+    border: 1px solid #dee2e6; /* ขอบจางๆ */
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #333;
+    margin-top: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* เงาเบาๆ */
+    word-wrap: break-word;
+}
+</style>
+
+<div class="container">
+    <div class="custom-container shadow-sm">
+        <h2>แก้ไขพิกัดร้านค้า</h2>
+        <div class="store-name">{{ store.store_name }}</div>
+        <div class="store-address">{{ store.store_address }}</div>
+
+        <form id="editForm" method="POST">
+            {% csrf_token %}
+            
+            <!-- ✅ Hidden field สำหรับ next -->
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="form-group">
+                <label for="latitude">ละติจูด</label>
+                <input type="text" id="latitude" name="latitude" class="form-control" value="{{ store.latitude }}">
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">ลองจิจูด</label>
+                <input type="text" id="longitude" name="longitude" class="form-control" value="{{ store.longitude }}">
+            </div>
+
+            <div class="button-group mt-3">
+                <button type="submit" class="btn btn-success">บันทึก</button>
+                <a href="{{ next|default:'admin_edit' }}" class="btn btn-secondary">ยกเลิก</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: "คุณต้องการบันทึกการแก้ไขนี้ใช่หรือไม่?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ใช่, บันทึก',
+            cancelButtonText: 'ไม่, ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('editForm').submit();
+            } else {
+                Swal.fire(
+                    'ยกเลิก!',
+                    'การแก้ไขถูกยกเลิก',
+                    'error'
+                )
+            }
+        });
+    });
+</script>
+{% endblock %}

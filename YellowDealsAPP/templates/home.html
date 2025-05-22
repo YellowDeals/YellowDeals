@@ -1,0 +1,1088 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yellow Deals</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="icon" href="../static/images/logo4.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        
+        .no-scroll {
+    overflow: hidden !important;
+    padding-right: var(--scrollbar-width);
+}
+
+        body {
+            background-color:  #FAFAFA;
+            font-family: 'Arial', sans-serif;
+            padding-right: var(--scrollbar-width); 
+        }
+        .body {
+            overflow-y: scroll;        /* ให้เลื่อนตามเนื้อหา */
+            scrollbar-width: none;     /* ซ่อน scrollbar (สำหรับ Firefox) */
+        }
+            
+        body::-webkit-scrollbar {
+            display: none;             /* ซ่อน scrollbar (สำหรับ Chrome, Safari) */
+        }
+
+        .top-bar {
+            background-color: #FFC107;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .right-icons a {
+            color: #212121;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 16px;
+        }
+
+        .top-bar .right-icons i {
+            margin-right: 5px;
+        }
+
+        @font-face {
+            font-family: 'Dancing_Script';
+            src: url('/static/fonts/DancingScript-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .website-name {
+            font-family: 'Dancing_Script', sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            color: #212121;
+        }
+
+        .website-name .logo {
+            height: 50px;
+            width: auto;
+        }
+
+
+        .search-container {
+            background-color: #37474f;
+            padding: 20px;
+            display: flex;
+            flex-direction: column; /* จัดเรียงเป็นแนวตั้ง */
+            align-items: center;
+            position: relative;
+        }
+
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .search-bar button {
+            background-color: #FFC107;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .search-bar button i {
+            color: white;
+            font-size: 18px;
+        }
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .search-input-wrapper input[type="text"] {
+            width: 100%;
+            padding-right: 2.5rem; /* เผื่อพื้นที่ให้ปุ่มกากบาท */
+            padding: 10px 20px;
+            box-sizing: border-box;
+            border-radius: 20px;
+        }
+        
+        .clear-btn {
+            background: transparent !important; 
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #888;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        .clear-btn:hover {
+            color: #000;
+        }
+
+        .btn-primary:hover {
+        background-color:rgb(252, 160, 31);
+        border-color: #ffc107;
+        color: black;
+    }
+
+        .filter-icons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            width: 100%;
+            margin-top: 5px; /* เพิ่มระยะห่างจากช่องค้นหา */
+            padding-right: -10%;
+        }
+
+    .filter-icons button {
+    background-color: white;
+    border: 2px solid #2C3E50;
+    border-radius: 50%;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease; /* ✅ เพิ่ม transform */
+}
+
+        .filter-icons button i {
+            color: black;
+            font-size: 20px;
+        }
+
+        .filter-icons button:hover {
+    background-color: #FFC107;
+    border-color: #FF8F00;
+    transform: scale(1.2);  /* ✅ เพิ่มเอฟเฟกต์ซูม */
+}
+
+        .filter-icons button.active {
+            background-color: #FF8F00;
+            border-color: #FFC107;
+        }
+
+        .filter-icons button.active i {
+            color: white;
+        }
+.filter-icons .saved-btn {
+    background-color: white;       /* พื้นหลังขาว */
+    border: 2px solid #2C3E50;     /* ขอบแบบเดียวกับปุ่มอื่น */
+    border-radius: 50%;            /* ขอบกลม */
+    padding: 10px 15px;               /* ขนาด padding เท่ากัน */
+    cursor: pointer;
+    font-size: 20px;
+    color: #FF4081;                /* สีชมพูหัวใจ */
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s, color 0.3s ease;
+    display: flex;                 /* จัดให้อยู่กึ่งกลาง */
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-icons .saved-btn:hover {
+    background-color: #FFC107;     /* พื้นหลังตอน hover เหมือนปุ่มอื่น */
+    border-color: #FF8F00;         /* ขอบตอน hover */
+    color: #e91e63;                /* สีชมพูเข้ม */
+    transform: scale(1.2);
+}
+
+        
+        .filter-box {
+        display: none;
+        position: fixed;
+        width: 200px;
+        background-color: white;
+        border: 1px solid #2C3E50;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .compare-button {
+        width: 100%;
+        background-color: #FFC107;
+        color: black;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .compare-button:hover {
+        background-color: #e0a800;
+    }
+
+ /* จัดการการจัดตำแหน่งของ container */
+.price-range-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* กล่องแถบ range */
+.range-slider {
+    display: flex;
+    justify-content: space-between;
+    width: 155px;
+    position: relative;
+}
+
+/* สไตล์ของ input-range */
+.input-field1 {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    cursor: pointer;
+}
+
+/* สไตล์สำหรับแถบช่วงราคาที่แสดงระหว่างสอง range */
+.input-field1::-webkit-slider-runnable-track {
+    height: 10px;
+    background: #ddd;
+}
+
+/* สไตล์สำหรับ thumb ของแต่ละ range */
+.input-field1::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background-color: #FF8F00;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2; /* ให้ thumb อยู่เหนือ track */
+}
+
+/* แสดงช่วงราคา */
+#price-range-display {
+    font-size: 16px;
+    text-align: center;
+}
+
+/* จัดระยะห่างระหว่างสอง range */
+.range-slider input[type="range"] {
+    position: absolute;
+    z-index: 1;
+}
+
+/* ใช้สีส้มอ่อนระหว่างช่วงราคา */
+.input-field1::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #FF8F00 0%, #FF8F00 50%, #ddd 50%, #ddd 100%);
+}
+
+/* ปรับให้หน้าต่างยืนยันจาก SweetAlert2 สวยงาม */
+.swal2-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.swal2-html-container {
+    font-size: 16px;
+}
+
+.swal2-confirm, .swal2-cancel {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.swal2-confirm {
+    background-color: #D9534F;  /* สีแดง */
+    color: white;
+}
+
+.swal2-confirm:hover {
+    background-color: #C9302C;
+}
+
+.swal2-cancel {
+    background-color: #5BC0DE;  /* สีน้ำเงิน */
+    color: white;
+}
+
+.swal2-cancel:hover {
+    background-color: #31B0D5;
+}
+
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+.product-image {
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: block;
+}
+
+.product-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;         /* แสดง 2 บรรทัด */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.4;
+    min-height: 2.0rem;            /* 2 บรรทัดพอดี */
+
+    /* แก้ปัญหาข้อความเบลอ */
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #e63946;
+    background-color: rgb(222, 155, 155);
+    padding: 4px 8px;
+    border-radius: 5px;
+    display: block;
+    width: fit-content;
+    min-height: 1.8rem;
+    
+
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.product-old-price {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    text-decoration: line-through; /* ✅ ขีดฆ่าราคาเก่า */
+}
+
+.card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .top-bar .right-icons {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .website-name {
+        font-size: 24px;
+    }
+
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 10px;
+    }
+
+    .search-bar button {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+        max-width: none;
+    }
+
+    .search-input-wrapper input[type="text"] {
+        padding: 14px 20px;
+        font-size: 16px;
+        height: auto;
+    }
+
+    .filter-icons {
+        justify-content: center;
+        flex-wrap: wrap;
+        padding-right: 0;
+        margin-top: 10px;
+    }
+
+    .filter-icons button {
+        padding: 10px;
+    }
+
+    .product-card {
+        margin: 10px 0;
+    }
+
+    .product-image {
+        height: auto;
+    }
+
+    .product-name {
+        font-size: 1rem;
+    }
+
+    .product-price {
+        font-size: 1rem;
+    }
+
+    .filter-box {
+        right: 10px;
+        top: 70px;
+    }
+}
+.btn-compare,
+.btn-clear {
+    min-width: 180px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+}
+
+/* ปุ่มเปรียบเทียบ */
+.btn-compare {
+    background-color: #FFC107;
+    color: white;
+    border: 1px solid #FFC107;
+}
+.btn-compare:hover {
+    background-color: #FF8F00;
+    border-color: #FF8F00;
+}
+
+
+/* ปุ่มล้างข้อมูล */
+.btn-clear1 {
+    background-color:rgb(223, 57, 57);
+    color:rgb(255, 255, 255);
+    border: 1px solid #ced4da;
+    min-width: 180px;         /* กำหนดความกว้างขั้นต่ำ */
+    padding: 10px 18px;       /* เพิ่มความสูง/ความกว้างของเนื้อปุ่ม */
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: center;
+    
+}
+.btn-clear1:hover {
+    background-color:rgb(181, 21, 21);
+    border-color: #adb5bd;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="website-name">
+    Yellow Deals 
+    </div>
+    <div class="right-icons">
+        {% if is_store_owner or is_general_user %}
+        <a href="{% url 'submit_complaint' %}">
+            <i class="fa-solid fa-triangle-exclamation"></i> รายงาน
+        </a>
+        {% endif %}
+        <a href="https://www.facebook.com/HamanoJK"><i class="fa-brands fa-facebook"></i> ติดตามฉันบน Facebook</a>
+        <a ><i class="fa-solid fa-phone"></i> 062-678-2590 </a>
+        {% if not is_admin %}
+            {% if not is_store_owner %}
+                <a href="{% url 'registershop' %}"><i class="fa-solid fa-store"></i> ลงทะเบียนร้านค้า</a>
+            {% else %}
+                <a href="{% url 'store_dashboard' %}"><i class="fa-solid fa-store"></i> ร้านของฉัน</a>
+            {% endif %}
+        {% endif %}
+        {% if is_admin %}
+        <a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-users-cog"></i> แอดมิน</a>
+        {% endif %}
+        {% if request.session.username %}
+        <a ><i class="fa-solid fa-user"></i> {{ request.session.username }}</a>
+        <a href="#" onclick="showLogoutConfirmation(event)">
+            <i class="fa-solid fa-sign-out-alt"></i> ออกจากระบบ
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}"><i class="fa-solid fa-sign-in-alt"></i> เข้าสู่ระบบ</a>
+        <a href="{% url 'register' %}"><i class="fa-solid fa-user-plus"></i> สมัครสมาชิก</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="search-container">
+    <div class="search-bar d-flex align-items-center mb-1 justify-content-center">
+        <div class="search-input-wrapper position-relative">
+            <input 
+                type="text" 
+                id="searchInput" 
+                name="q"
+                class="form-control" 
+                placeholder="ค้นหาสินค้า ชื่อร้าน หมวดหมู่ ฯลฯ" 
+                value="{{ search_query|default:'' }}"
+                onkeydown="if(event.key === 'Enter') searchProduct()"
+            >
+    
+            {% if search_query %}
+                <button 
+                    type="button" 
+                    class="clear-btn visible" 
+                    onclick="clearSearch()"
+                >×</button>
+            {% endif %}
+        </div>
+    
+        <button onclick="searchProduct()" class="btn btn-primary ms-2">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+    
+
+    <div class="filter-icons">
+        {% if is_general_user %}
+        <a href="{% url 'saved_products' %}" class="saved-btn">
+            <i class="fa-solid fa-heart"></i>
+        </a>
+        {% endif %}
+        <button id="compare-btn"><i class="fa-solid fa-balance-scale-left"></i></button>
+        <button id="filter-btn"><i class="fa-solid fa-sliders"></i></button>
+        
+    </div>
+</div>
+
+<!-- กล่องเปรียบเทียบสินค้า -->
+<div id="compare-box" class="filter-box mt-1">
+    <h5>เปรียบเทียบสินค้า</h5>
+
+    <!-- ช่องค้นหาจากชื่อสินค้า -->
+    <input type="text" id="compare-product-name" class="form-control" placeholder="พิมพ์ชื่อสินค้า..." value="{{ request.GET.q|default_if_none:'' }}" oninput="filterCompareList()">
+    <ul id="compare-list" class="list-group mt-2"></ul>
+
+    <!-- ฟิลเตอร์เพิ่มเติม -->
+    <label for="compare-category">หมวดหมู่สินค้า:</label>
+    <select id="compare-category" class="input-field">
+        <option value="">เลือกหมวดหมู่</option>
+        {% for category in categories %}
+            <option value="{{ category.categories_id }}" {% if request.GET.category == category.categories_id|stringformat:"s" %}selected{% endif %}>
+                {{ category.categories_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="compare-price-range">ช่วงราคา:</label>
+    <select id="compare-price-range" class="input-field">
+        <option value="">เลือกช่วงราคา</option>
+        <option value="ต่ำกว่า 20 บาท" {% if request.GET.price_range == "0-20" %}selected{% endif %}>ต่ำกว่า 20 บาท</option>
+        <option value="20-50 บาท" {% if request.GET.price_range == "20-50" %}selected{% endif %}>20 - 50 บาท</option>
+        <option value="50-100 บาท" {% if request.GET.price_range == "50-100" %}selected{% endif %}>50 - 100 บาท</option>
+        <option value="100-200 บาท" {% if request.GET.price_range == "100-200" %}selected{% endif %}>100 - 200 บาท</option>
+        <option value="มากกว่า 200 บาท" {% if request.GET.price_range == "200-100000" %}selected{% endif %}>มากกว่า 200 บาท</option>
+    </select>
+
+    <label for="compare-distance">ระยะทาง:</label>
+    <select id="compare-distance" class="input-field">
+        <option value="">-</option>
+        <option value="1" {% if request.GET.distance_range == "1" %}selected{% endif %}>ไม่เกิน 1 กม.</option>
+        <option value="5" {% if request.GET.distance_range == "5" %}selected{% endif %}>ไม่เกิน 5 กม.</option>
+        <option value="10" {% if request.GET.distance_range == "10" %}selected{% endif %}>ไม่เกิน 10 กม.</option>
+        <option value="20" {% if request.GET.distance_range == "20" %}selected{% endif %}>ไม่เกิน 20 กม.</option>
+        <option value="50" {% if request.GET.distance_range == "50" %}selected{% endif %}>ไม่เกิน 50 กม.</option>
+    </select>
+
+
+
+    <label for="compare-store-type">ร้านค้า:</label>
+    <select id="compare-store-type" class="input-field">
+        <option value="">เลือกร้านค้า</option>
+        {% for store in store_types %}
+            <option value="{{ store.typeStore_id }}" {% if request.GET.store_type == store.typeStore_id|stringformat:"s" %}selected{% endif %}>
+                {{ store.typeStore_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <div class="d-flex flex-wrap gap-2 mt-2">
+        <button id="compare-submit" class="btn btn-compare px-4 py-2" onclick="handleCompare()">
+            <i class="bi bi-bar-chart-line"></i> เปรียบเทียบ
+        </button>
+        <button id="compare-clear" class="btn btn-clear1 px-4 py-2" onclick="clearCompareFilters()">
+            <i class="bi bi-x-circle"></i> ล้างข้อมูล
+        </button>
+    </div>
+</div>
+
+<!-- JavaScript -->
+{% block scripts %}
+<script src="{% static 'js/compare.js' %}"></script>
+{% endblock %}
+
+<!-- กล่องคัดกรองสินค้า -->
+<div id="filter-box" class="filter-box mt-0" style="display:none;">
+    <h5>กรองสินค้า</h5>
+
+    <label for="filter-category">หมวดหมู่สินค้า:</label>
+    <select id="filter-category" class="input-field mb-1">
+        <option value="">เลือกหมวดหมู่</option>
+        {% for category in categories %}
+            <option value="{{ category.categories_id }}" {% if category.categories_id|stringformat:"s" == selected_category %}selected{% endif %}>{{ category.categories_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="filter-product-type">ประเภทสินค้า:</label>
+    <select id="filter-product-type" class="input-field mb-1">
+        <option value="">เลือกประเภทสินค้า</option>
+        {% for type in product_types %}
+            <option value="{{ type.productType_id }}" {% if type.productType_id|stringformat:"s" == request.GET.product_type %}selected{% endif %}>{{ type.productType_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="filter-store-type">ประเภทร้านค้า:</label>
+    <select id="filter-store-type" class="input-field mb-1">
+        <option value="">เลือกประเภทร้านค้า</option>
+        {% for store in store_types %}
+            <option value="{{ store.typeStore_id }}" {% if store.typeStore_id|stringformat:"s" == request.GET.store_type %}selected{% endif %}>{{ store.typeStore_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="filter-price-range" class="price-range-label">ช่วงราคา:</label>
+    <div class="price-range-container">
+        <input type="text" id="filter-price-range" name="price_range" class="input-field" placeholder="เช่น 100-500" value="{{ request.GET.price_range }}">
+    </div>
+
+    <label for="filter-sale-date">วันที่จำหน่าย:</label>
+    <input type="date" id="filter-sale-date" class="input-field mb-1" value="{{ request.GET.sale_date }}">
+
+    <div class="d-flex flex-column gap-2 mt-1">
+    <button id="filters-submit" class="btn btn-compare px-4 py-2 rounded-pill shadow-sm">
+        <i class="bi bi-funnel-fill me-2"></i> คัดกรอง
+    </button>
+    <button id="filter-clear" class="btn btn-clear1 px-4 py-2 rounded-pill shadow-sm">
+        <i class="bi bi-x-circle me-2"></i> ล้างข้อมูล
+    </button>
+</div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        {% if page_obj.object_list %}
+            {% for item in page_obj %}
+                {% with product=item.product %}
+                <div class="col-md-3 mb-4 d-flex">
+                    <div class="card shadow-sm border-0 flex-fill d-flex flex-column product-card h-100 position-relative">
+
+                        {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}" class="card-img-top product-image" alt="{{ product.product_name }}">
+                        {% else %}
+                            <img src="{% static 'images/product.png' %}" class="card-img-top product-image" alt="สินค้า">
+                        {% endif %}
+
+                        <div class="card-body d-flex flex-column px-3 py-3">
+                            <h5 class="card-title product-name text-truncate">{{ product.product_name }}</h5>
+
+                            <!-- ราคาลดแล้ว -->
+                            <p class="card-text product-price text-muted fw-semibold">
+                                {{ product.product_price }} บาท
+                            </p>
+
+                            <!-- ราคาปกติ (หากมี) -->
+                            {% if product.original_price and product.original_price > product.product_price %}
+                                <p class="product-old-price">
+                                จากราคา {{ product.original_price }} บาท
+                                </p>
+                            {% endif %}
+
+                            <!-- เปรียบเทียบราคากับร้านอื่น -->
+                            {% if compare_price_enabled and item.price_diff %}
+                                <p class="text-success small">
+                                    ราคานี้ถูกกว่าร้านอื่นประมาณ {{ item.price_diff }} บาท
+                                </p>
+                            {% endif %}
+
+                            <!-- แสดงระยะทาง -->
+                            {% if has_distance and item.distance %}
+                                <p class="text-muted small">
+                                    ระยะทางจากคุณประมาณ {{ item.distance }} กม.
+                                </p>
+                            {% endif %}
+
+                            <div class="mt-auto">
+                                <a href="{% url 'product_detail' product.product_id %}" class="btn btn-outline-primary w-100">
+                                    ดูรายละเอียด
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">ไม่พบสินค้า</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% if page_obj.paginator.count > 20 %}
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="?page=1">เริ่มต้น</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">ก่อนหน้า</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">ถัดไป</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">สุดท้าย</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endif %}
+    </div>
+</div>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ===== แสดงข้อความแจ้งเตือน =====
+    {% for message in messages %}
+    disableScroll();
+    Swal.fire({
+        title: '{{ message }}',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false
+    }).then(() => {
+        enableScroll();
+    });
+    {% endfor %}
+
+    updatePriceRange();
+});
+function disableScroll() {
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.setProperty('--scrollbar-width', `${scrollBarWidth}px`);
+    document.body.classList.add("no-scroll");
+}
+
+function enableScroll() {
+    document.body.classList.remove("no-scroll");
+    document.body.style.removeProperty('--scrollbar-width');
+}
+// ========== ส่วนที่ 1: ระบบค้นหา ==========
+function searchProduct() {
+    const query = document.getElementById('searchInput').value.trim();
+    const params = new URLSearchParams(window.location.search);
+    if (query) params.set('q', query);
+    else params.delete('q');
+    params.set('page', 1);
+    window.location.href = `${window.location.pathname}?${params.toString()}`;
+}
+function clearSearch() {
+    const params = new URLSearchParams(window.location.search);
+    params.delete('q');
+    params.delete('page');
+    window.location.href = `${window.location.pathname}?${params.toString()}`;
+}
+
+// ========== ส่วนที่ 2: ปุ่ม Filter/Compare UI ==========
+function toggleActiveButton(clickedButton) {
+    if (clickedButton.classList.contains("active")) {
+        clickedButton.classList.remove("active");
+    } else {
+        document.querySelectorAll('.filter-icons button').forEach(button => button.classList.remove("active"));
+        clickedButton.classList.add("active");
+    }
+}
+document.querySelectorAll('.filter-icons button').forEach(button => {
+    button.addEventListener('click', function (event) {
+        toggleActiveButton(this);
+        event.stopPropagation();
+    });
+});
+
+// เปิด/ปิดกล่อง filter
+function toggleFilterBox(button, boxId) {
+    const box = document.getElementById(boxId);
+    const buttonRect = button.getBoundingClientRect();
+    const boxWidth = box.offsetWidth;
+    const boxHeight = box.offsetHeight;
+
+    if (box.style.display === 'block') {
+        box.style.display = 'none';
+        enableScroll();
+    } else {
+        document.querySelectorAll('.filter-box').forEach(b => b.style.display = 'none');
+        disableScroll();
+        const left = buttonRect.left + window.scrollX - 145;
+        const top = buttonRect.bottom + window.scrollY + 5;
+        box.style.position = 'absolute';
+        box.style.top = `${top}px`;
+        box.style.left = `${left}px`;
+        box.style.display = 'block';
+    }
+}
+document.getElementById("compare-btn").addEventListener("click", function (event) {
+    toggleFilterBox(this, "compare-box");
+    event.stopPropagation();
+});
+document.getElementById("filter-btn").addEventListener("click", function (event) {
+    toggleFilterBox(this, "filter-box");
+    event.stopPropagation();
+});
+window.addEventListener('click', function (event) {
+    if (!event.target.closest('.filter-box') && !event.target.closest('.filter-icons')) {
+        document.querySelectorAll('.filter-box').forEach(box => box.style.display = 'none');
+        document.querySelectorAll('.filter-icons button').forEach(button => button.classList.remove("active"));
+        enableScroll();
+    }
+});
+function disableScroll() {
+    document.body.classList.add("no-scroll");
+}
+function enableScroll() {
+    document.body.classList.remove("no-scroll");
+}
+
+// ========== ส่วนที่ 3: ระบบเปรียบเทียบสินค้า ==========
+let selectedProducts = [];
+
+// ฟังก์ชันหลักเมื่อกดปุ่มเปรียบเทียบ
+function handleCompare() {
+    const productName = document.getElementById('compare-product-name').value.trim();
+    const category = document.getElementById('compare-category').value;
+    const storeType = document.getElementById('compare-store-type').value;
+    const priceRange = document.getElementById('compare-price-range').value;
+    const distance = document.getElementById('compare-distance').value;
+
+    if (!navigator.geolocation) {
+        alert('เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง');
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        const params = new URLSearchParams();
+        if (productName) params.append('q', productName);
+        if (category) params.append('category', category);
+        if (storeType) params.append('store_type', storeType);
+        if (priceRange) params.append('price_range', parsePriceRange(priceRange));
+        if (distance) params.append('distance_range', distance);
+        params.append('user_lat', lat);
+        params.append('user_lng', lng);
+
+        window.location.href = '?' + params.toString();
+    }, function () {
+        alert('ไม่สามารถระบุตำแหน่งของคุณได้');
+    });
+}
+
+// แปลงข้อความช่วงราคา → ตัวเลขสำหรับ filter
+function parsePriceRange(label) {
+    switch (label) {
+        case 'ต่ำกว่า 20 บาท': return '0-20';
+        case '20-50 บาท': return '20-50';
+        case '50-100 บาท': return '50-100';
+        case '100-200 บาท': return '100-200';
+        case 'มากกว่า 200 บาท': return '200-100000';
+        default: return '';
+    }
+}
+
+// อัปเดตรายการสินค้าเปรียบเทียบ
+function updateCompareList() {
+    const list = document.getElementById("compare-list");
+    list.innerHTML = '';
+    selectedProducts.forEach(p => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.dataset.name = p.name;
+        li.textContent = `${p.name} (${p.price} บาท)`;
+
+        const btn = document.createElement("button");
+        btn.className = "btn btn-sm btn-danger ms-2";
+        btn.textContent = "ลบ";
+        btn.onclick = () => removeProduct(p.id);
+        li.appendChild(btn);
+
+        list.appendChild(li);
+    });
+    filterCompareList();
+}
+
+// กรองรายการในกล่องเปรียบเทียบตามชื่อ
+function filterCompareList() {
+    const keyword = document.getElementById("compare-product-name").value.toLowerCase();
+    const items = document.querySelectorAll("#compare-list li");
+    items.forEach(li => {
+        const text = li.dataset.name.toLowerCase();
+        li.style.display = text.includes(keyword) ? "flex" : "none";
+    });
+}
+
+// ลบสินค้าออกจากรายการเปรียบเทียบ
+function removeProduct(id) {
+    selectedProducts = selectedProducts.filter(p => p.id !== id);
+    updateCompareList();
+}
+
+// ล้างข้อมูลทั้งหมดในฟิลเตอร์และรายการเปรียบเทียบ และรีเฟรชหน้า
+document.getElementById('compare-clear').addEventListener('click', function () {
+    selectedProducts = [];
+    updateCompareList();
+
+    document.getElementById('compare-product-name').value = '';
+    document.getElementById('compare-category').value = '';
+    document.getElementById('compare-price-range').value = '';
+    document.getElementById('compare-distance').value = '';
+    document.getElementById('compare-store-type').value = '';
+
+    location.href = window.location.pathname; // รีโหลดหน้า → คืนค่าเริ่มต้น
+});
+
+// ========== ส่วนที่ 4: ระบบกรองสินค้า ==========
+document.getElementById('filters-submit').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const category = document.getElementById('filter-category').value;
+    const productType = document.getElementById('filter-product-type').value;
+    const storeType = document.getElementById('filter-store-type').value;
+    const priceRange = document.getElementById('filter-price-range').value.trim();
+    const saleDate = document.getElementById('filter-sale-date').value;
+
+    const params = new URLSearchParams(window.location.search);
+
+    // เพิ่มหรืออัปเดตพารามิเตอร์
+    if (category) params.set('category', category); else params.delete('category');
+    if (productType) params.set('product_type', productType); else params.delete('product_type');
+    if (storeType) params.set('store_type', storeType); else params.delete('store_type');
+    if (priceRange) params.set('price_range', priceRange); else params.delete('price_range');
+    if (saleDate) params.set('sale_date', saleDate); else params.delete('sale_date');
+
+    // รีเซ็ตหน้าที่แล้ว (ถ้ามี page= อยู่)
+    params.delete('page');
+
+    // โหลดใหม่พร้อม query string ที่กรอง
+    window.location.href = '?' + params.toString();
+});
+
+document.getElementById('filter-clear').addEventListener('click', function () {
+    // รีเซตค่าฟิลด์ใน form
+    document.getElementById('filter-category').value = '';
+    document.getElementById('filter-product-type').value = '';
+    document.getElementById('filter-store-type').value = '';
+    document.getElementById('filter-price-range').value = '';
+    document.getElementById('filter-sale-date').value = '';
+
+    // โหลดหน้าใหม่โดยลบ query ทั้งหมด
+    const baseUrl = window.location.origin + window.location.pathname;
+    window.location.href = baseUrl;
+});
+
+// ========== ส่วนที่ 5: ตัวเลื่อนช่วงราคา ==========
+const startRange = document.getElementById('price-range-start');
+const endRange = document.getElementById('price-range-end');
+const displayRange = document.getElementById('price-range-display');
+
+function updatePriceRange() {
+    let startValue = parseInt(startRange.value);
+    let endValue = parseInt(endRange.value);
+
+    if (startValue >= endValue) startValue = endValue - 50;
+    startRange.value = startValue;
+    displayRange.textContent = `${startValue} - ${endValue} บาท`;
+}
+startRange.addEventListener('input', updatePriceRange);
+endRange.addEventListener('input', updatePriceRange);
+
+// ========== ส่วนที่ 6: ดึงตำแหน่งผู้ใช้ ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.get("user_lat") || !url.searchParams.get("user_lng")) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                url.searchParams.set("user_lat", position.coords.latitude);
+                url.searchParams.set("user_lng", position.coords.longitude);
+                window.location.href = url.toString();
+            }, (error) => {
+                console.warn("ไม่สามารถดึงพิกัดผู้ใช้ได้:", error.message);
+            });
+        }
+    }
+});
+
+// ========== ส่วนที่ 7: ออกจากระบบ ==========
+function showLogoutConfirmation(event) {
+    event.preventDefault();
+    disableScroll();
+    Swal.fire({
+        title: 'คุณแน่ใจหรือไม่?',
+        text: "คุณต้องการออกจากระบบใช่หรือไม่?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ออกจากระบบ',
+        cancelButtonText: 'ยกเลิก',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/logout/';
+            enableScroll();
+        }
+    });
+}
+</script>
+
+</body>
+</html>

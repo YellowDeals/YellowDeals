@@ -1,0 +1,520 @@
+{% extends 'baseShop.html' %}
+
+{% block title %} Yellow Deals{% endblock %}
+
+{% block content %}
+
+<style>
+    .body {
+        overflow-y: scroll;        /* ให้เลื่อนตามเนื้อหา */
+        scrollbar-width: none;     /* ซ่อน scrollbar (สำหรับ Firefox) */
+    }
+    
+    body::-webkit-scrollbar {
+        display: none;             /* ซ่อน scrollbar (สำหรับ Chrome, Safari) */
+    }
+    .custom-container {
+        border-radius: 10px;
+        background-color: #8e7f6e;
+        padding: 20px;
+        border: 5px solid rgba(0, 0, 0, 0.72);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        margin: 30px auto;
+        box-sizing: border-box;
+    }
+    
+
+    .filter-bar button {
+        margin-right: 10px;
+    }
+
+    #allProducts table { 
+        margin-top: -30px; 
+    }
+
+    .table-container {
+        display: none;
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden; 
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+   /* หัวตาราง */
+.table-container th {
+    padding: 12px 15px;
+    text-align:center;
+    background-color:rgb(244, 244, 244);
+    border: 2px solid #000;
+    font-size:18px;
+}
+
+/* แถวข้อมูล */
+.table-container td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 2px solid #000;
+    background-color: #fff;
+    font-size:18px;
+}
+    .table-container th {
+        background-color:rgb(246, 210, 31);
+    }
+
+    .pagination {
+        margin-top: -5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .pagination a,
+    .pagination span {
+        padding: 8px 14px;
+        border-radius: 5px;
+        background-color: #f1f1f1;
+        color: #333;
+        text-decoration: none;
+        border: 1px solid #ccc;
+    }
+    
+    .pagination a:hover {
+        background-color: #e2e2e2;
+    }
+    .header-with-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .add-button {
+        display: inline-block;
+        font-size: 18px;
+        margin-bottom: 20px;
+        background-color: rgb(81, 220, 49);
+        color: #000;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border: 2px solid #000;
+        margin-left: 1100px;
+    }
+    
+    .add-button:hover {
+        background-color: #218838;
+        color: #fff;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px; /* เว้นระยะระหว่างปุ่ม */
+    }
+    
+    /* ปุ่มสไตล์ต่างๆ */
+    .btn-warning, .btn-danger, .btn-secondary {
+        padding: 8px 12px;
+        margin: 0;
+        border-radius: 5px;
+        align-items: center;
+        text-align: center; 
+        color: #000;
+        border: 2px solid #000;
+    }
+    
+    /* ปุ่ม warning */
+    .btn-warning {
+        background-color: #ffc107;
+        border: 2px solid #000;
+    }
+    
+    .btn-warning:hover {
+        background-color: #e0a800;
+        color: #fff;
+        border: 2px solid #000;
+    }
+    
+    /* ปุ่ม danger */
+    .btn-danger {
+        background-color: #dc3545;
+        border: 2px solid #000;
+    }
+    
+    .btn-danger:hover {
+        background-color: #c82333;
+        color: #fff;
+        border: 2px solid #000;
+    }
+    
+    /* ปุ่ม secondary */
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border-radius: 5px;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+    .btn-yellow {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        border: 2px solid #000;
+    }
+
+    .btn-yellow:hover {
+        background-color: #e2930d;
+        color: white;
+        border: 2px solid #000;
+    }
+
+    .btn-yellow.active {
+        background-color:#e2930d;
+        box-shadow: 0 0 0 0.2rem rgba(255, 119, 7, 0.82); /* วงเหลืองนอก */
+        color: white;
+        font-weight: bold;
+        border: 2px solid #000;
+    }
+
+    .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    td {
+        text-align: center; /* จัดปุ่มให้อยู่กลาง */
+    }
+    
+    .btn {
+        display: inline-block; /* ทำให้ปุ่มแสดงเป็น inline-block */
+        margin: 0 5px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+    }
+
+    .search-bar {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        margin-left: 430px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .search-bar input {
+        padding: 8px;
+        width: 300px;
+        border: 2px solid #000;
+        border-radius: 5px;
+    }
+
+</style>
+<div class="container">
+    <div class="custom-container shadow-sm p-3 mb-4">
+        <!-- ปุ่มฟิลเตอร์ -->
+        <div class="filter-bar mb-3">
+            <span><strong style="font-size:18px; color: #fff;">จัดการ REPORT :</strong></span>
+            <a href="?filter=all" class="btn btn-yellow {% if filter_type == 'all' %}active{% endif %}">ทั้งหมด</a>
+            <a href="?filter=month" class="btn btn-yellow {% if filter_type == 'month' %}active{% endif %}">ประจำเดือน</a>
+            <a href="?filter=productChart" class="btn btn-yellow {% if filter_type == 'productChart' %}active{% endif %}">กราฟ/รายงาน</a>
+        
+            {% if filter_type == 'all' %}
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="ค้นหาสินค้า..." onkeyup="searchTable()">
+            </div>
+            {% endif %}
+        </div>
+
+{% if filter_type == 'productChart' %}
+<form method="get" class="mb-3 d-flex align-items-center gap-2">
+    <input type="hidden" name="filter" value="productChart">
+    <label for="month-select" class="mb-0">เลือกเดือน:</label>
+    <select name="month" id="month-select" class="form-select" style="width: 150px;" onchange="this.form.submit()">
+        <option value=""> เดือนล่าสุด </option>
+        {% for month_num, month_name in months_thai %}
+            <option value="{{ month_num }}" {% if selected_month|stringformat:"s" == month_num|stringformat:"s" %}selected{% endif %}>
+                {{ month_name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if selected_month %}
+    <a href="{% url 'export_product_report' %}?month={{ selected_month }}" class="btn btn-success mb-3">
+        ดาวน์โหลดรายงานสินค้าเดือนนี้ (Excel)
+    </a>
+    <button onclick="downloadChart()" class="btn btn-primary mb-3">ดาวน์โหลดกราฟของเดือนนี้</button>
+{% else %}
+    <a href="{% url 'export_product_report' %}" class="btn btn-success mb-3">ดาวน์โหลดรายงานสินค้า (Excel)</a>
+    <button onclick="downloadChart()" class="btn btn-primary mb-3">ดาวน์โหลดกราฟ</button>
+{% endif %}
+
+<div style="width: 100%; max-width: 900px; margin: auto;">
+    <canvas id="productChart" style="background-color: white; height: 400px;"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // ส่งข้อมูลสินค้าเข้า JS (ไม่ต้องกรองใน template เพราะ view ส่งมากรองแล้ว)
+    const products = [
+        {% for product in products %}
+        {
+            name: "{{ product.product_name|escapejs }}",
+            view_count: {{ product.view_count|default:0 }},
+        },
+        {% endfor %}
+    ];
+
+    function generateColors(n) {
+        let colors = [];
+        for (let i = 0; i < n; i++) {
+            const hue = (i * 360 / n) % 360;
+            colors.push(`hsl(${hue}, 70%, 60%)`);
+        }
+        return colors;
+    }
+
+    const chartContainer = document.getElementById('productChart').parentElement;
+
+    if (products.length === 0) {
+        chartContainer.innerHTML = `
+            <div class="alert alert-warning text-center mt-3" role="alert">
+                ไม่มีข้อมูลสำหรับเดือนนี้
+            </div>
+        `;
+    } else {
+        const ctx = document.getElementById('productChart').getContext('2d');
+        const barColors = generateColors(products.length);
+
+        const productChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: products.map(p => p.name),
+                datasets: [{
+                    label: 'จำนวนการเข้าชมสินค้า',
+                    data: products.map(p => p.view_count),
+                    backgroundColor: barColors,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                    borderWidth: 1,
+                    barThickness: 30,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'รายการสินค้า',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'จำนวนการเข้าชม',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: true }
+                }
+            },
+            plugins: [{
+                id: 'backgroundPlugin',
+                beforeDraw: (chart) => {
+                    const ctx = chart.canvas.getContext('2d');
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, chart.width, chart.height);
+                    ctx.restore();
+                }
+            }]
+        });
+
+        window.downloadChart = function () {
+            const link = document.createElement('a');
+            link.download = 'product_chart.png';
+            link.href = productChart.toBase64Image();
+            link.click();
+        };
+    }
+</script>
+{% endif %}
+        
+            {% if filter_type == 'all' %}
+            <div id="all" class="table-container" style="display: block;">
+                <table class="table table-bordered mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ลำดับ</th>
+                            <th>ชื่อสินค้า</th>
+                            <th>จำนวนการเข้าชม</th>
+                            <th>ลดราคาเมื่อ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ forloop.counter|add:start_num }}</td>
+                            <td>{{ product.product_name }}</td>
+                            <td>{{ product.view_count }} ครั้ง</td>
+                            <td>
+                                {% if product.start_time %}
+                                    {{ product.start_time|date:"d F Y" }}
+                                {% else %}
+                                    ยังไม่กำหนดวันลดราคา
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">ยังไม่มีสินค้าที่จะรายงาน</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+    <div class="pagination">
+        {% if products.has_previous %}
+            <a href="?filter=all&page={{ products.previous_page_number }}" class="btn btn-outline-dark mx-1">&laquo; ก่อนหน้า</a>
+        {% endif %}
+
+            <span class="btn btn-secondary disabled mx-1">หน้า {{ products.number }} / {{ products.paginator.num_pages }}</span>
+
+        {% if products.has_next %}
+            <a href="?filter=all&page={{ products.next_page_number }}" class="btn btn-outline-dark mx-1">ถัดไป &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+        
+{% if filter_type == 'month' %}
+<div id="month" class="table-container" style="display: block;">
+    <form method="get" id="monthFilterForm">
+        <input type="hidden" name="filter" value="month">
+        <div class="mb-3">
+            <label for="monthSelect"><strong>เลือกเดือน:</strong></label>
+            <select id="monthSelect" name="month" class="form-select" onchange="document.getElementById('monthFilterForm').submit()">
+                <option value="">-- เลือกเดือน --</option>
+                {% for number, name in months_thai %}
+                <option value="{{ number }}" {% if number|stringformat:"d" == selected_month %}selected{% endif %}>
+                    {{ name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <h4 id="totalViews" style="margin-top: 10px;">ยอดเข้าชมรวม: {{ total_views }} ครั้ง</h4>
+
+    <table class="table table-bordered mt-3" id="monthProductTable">
+        <thead class="table-dark">
+            <tr>
+                <th>ลำดับ</th>
+                <th>ชื่อสินค้า</th>
+                <th>จำนวนการเข้าชม</th>
+                <th>ลดราคาเมื่อ</th>
+            </tr>
+        </thead>
+        <tbody id="monthProductTableBody">
+            {% for product in products %}
+            <tr {% if product.start_time %}data-month="{{ product.start_time|date:'m' }}"{% endif %}>
+                <td>{{ forloop.counter|add:start_num }}</td>
+                <td>{{ product.product_name }}</td>
+                <td class="view-count">{{ product.view_count }}</td>
+                <td>
+                    {% if product.start_time %}
+                        {{ product.start_time|date:"d F Y" }}
+                    {% else %}
+                        ยังไม่กำหนดวันลดราคา
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">ยังไม่มีสินค้าที่จะรายงาน</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if products.has_previous %}
+            <a href="?{% if filter_type %}filter={{ filter_type }}&{% endif %}{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ products.previous_page_number }}" class="btn btn-outline-dark mx-1">&laquo; ก่อนหน้า</a>
+        {% endif %}
+
+        <span class="btn btn-secondary disabled mx-1">หน้า {{ products.number }} / {{ products.paginator.num_pages }}</span>
+
+        {% if products.has_next %}
+            <a href="?{% if filter_type %}filter={{ filter_type }}&{% endif %}{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ products.next_page_number }}" class="btn btn-outline-dark mx-1">ถัดไป &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+<script>
+
+    function downloadChart() {
+        const link = document.createElement('a');
+        link.href = document.getElementById('productChart').toDataURL('image/png');
+        link.download = 'product_report.png';
+        link.click();
+    }>
+    // ค้นหาในตารางที่กำลังเปิดอยู่
+    function searchTable() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const activeTable = document.querySelector('.table-container[style*="display: block"] table');
+        const rows = activeTable.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let found = false;
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(input)) {
+                    found = true;
+                    break;
+                }
+            }
+            rows[i].style.display = found ? '' : 'none';
+        }
+    }
+
+    function filterBySelectedMonth() {
+        const selectedMonth = document.getElementById('monthSelect').value;
+        const rows = document.querySelectorAll('#monthProductTableBody tr');
+        let totalViews = 0;
+    
+        rows.forEach(row => {
+            const rowMonth = row.getAttribute('data-month');
+            const viewCountCell = row.querySelector('.view-count');
+            const viewCount = parseInt(viewCountCell.textContent) || 0;
+    
+            if (selectedMonth === '' || rowMonth === selectedMonth.padStart(2, '0')) {
+                row.style.display = '';
+                totalViews += viewCount;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    
+        document.getElementById('totalViews').innerText = `ยอดเข้าชมรวม: ${totalViews} ครั้ง`;
+    }
+</script>
+{% endblock %}

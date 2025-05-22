@@ -1,0 +1,369 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yellow Deals</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="{% static 'images/logo4.png' %}" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body.scroll-compensate {
+    padding-right: var(--scrollbar-compensate, 0px);
+    overflow: hidden;
+}
+    body {
+    background-image: url("{% static 'images/index.png' %}");
+    background-size: cover;          /* ขยายภาพให้เต็มหน้าจอ */
+    background-repeat: no-repeat;    /* ไม่ให้ภาพซ้ำ */
+    background-attachment: fixed;    /* ให้พื้นหลังอยู่กับที่เวลาสกอลล์ */
+    font-family: 'Arial', sans-serif;
+    overflow-y: scroll;
+}
+
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        .top-bar {
+            background-color: #FFC107;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .right-icons a {
+            color: #212121;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 16px;
+        }
+
+        .top-bar .right-icons i {
+            margin-right: 5px;
+        }
+
+        @font-face {
+            font-family: 'Dancing_Script';
+            src: url('/static/fonts/DancingScript-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .website-name {
+            font-family: 'Dancing_Script', sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            color: #212121;
+        }
+
+        .website-name .logo {
+            height: 50px;
+            width: auto;
+        }
+
+
+        /* ปรับให้หน้าต่างยืนยันจาก SweetAlert2 สวยงาม */
+        .swal2-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .swal2-html-container {
+            font-size: 14px;
+        }
+
+        .swal2-confirm, .swal2-cancel {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 14px; /* ขนาดฟอนต์เล็กลง */
+        }
+
+        .swal2-confirm {
+            background-color: #D9534F;  /* สีแดง */
+            color: white;
+        }
+
+        .swal2-confirm:hover {
+            background-color: #C9302C;
+        }
+
+        .swal2-cancel {
+            background-color: #5BC0DE;  /* สีน้ำเงิน */
+            color: white;
+        }
+
+        .swal2-cancel:hover {
+            background-color: #31B0D5;
+        }
+
+.custom-container {
+    border-radius: 12px;
+    background: linear-gradient(145deg, #ffffff, #FAFAFA);
+    padding: 25px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    max-width: 900px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.custom-container:hover {
+    transform: translateY(-5px);
+}
+
+.custom-container img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+}
+.custom-container img:hover {
+    transform: scale(1.02);
+}
+
+.row > .col-md-6 {
+    margin-bottom: 20px;
+}
+
+.btn {
+    font-size: 14px;
+}
+
+.bookmark-form {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: -30px;
+    font-size: 14px;
+}
+
+.bookmark-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.bookmark-button:hover {
+    transform: scale(1.1);
+}
+
+.price {
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.original-price {
+    color: #888;
+    text-decoration: line-through;
+    margin-right: 10px;
+}
+
+.sale-price {
+    color: #e63946;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.section-divider {
+    border-top: 1px dashed #ccc;
+    margin: 20px 0;
+}
+
+.product-details-section {
+    margin-top: 30px;
+    background: #fffbe6;
+    border-left: 4px solid #FFC107;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.product-details-section i {
+    color: #FFC107;
+    font-size: 20px;
+    margin-top: 3px;
+}
+
+
+    </style>
+</head>
+<body>
+
+<!-- แถบ top-bar -->
+<div class="top-bar">
+    <div class="website-name">
+        Yellow Deals
+    </div>
+    <div class="right-icons">
+        <a href="{% url 'submit_complaint' %}"><i class="fa-solid fa-triangle-exclamation"></i> รายงาน</a>
+        <a href="https://www.facebook.com/HamanoJK"><i class="fa-brands fa-facebook"></i> ติดตามฉันบน Facebook</a>
+        <a><i class="fa-solid fa-phone"></i> 062-678-2590 </a>
+        {% if not is_admin %}
+            {% if not is_store_owner %}
+                <a href="{% url 'registershop' %}"><i class="fa-solid fa-store"></i> ลงทะเบียนร้านค้า</a>
+            {% else %}
+                <a href="{% url 'store_dashboard' %}"><i class="fa-solid fa-store"></i> ร้านของฉัน</a>
+            {% endif %}
+        {% endif %}
+        {% if is_admin %}
+        <a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-users-cog"></i> แอดมิน</a>
+        {% endif %}
+        {% if request.session.username %}
+        <a><i class="fa-solid fa-user"></i> {{ request.session.username }}</a>
+        <a href="#" onclick="showLogoutConfirmation(event)">
+            <i class="fa-solid fa-sign-out-alt"></i> ออกจากระบบ
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}"><i class="fa-solid fa-sign-in-alt"></i> เข้าสู่ระบบ</a>
+        <a href="{% url 'register' %}"><i class="fa-solid fa-user-plus"></i> สมัครสมาชิก</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="custom-container">
+    <a href="{{ back_url }}" class="btn btn-secondary mb-3">← ย้อนกลับ</a>
+
+    <div class="row">
+        <!-- รูปสินค้า -->
+        <div class="col-md-6">
+            {% if product.product_image %}
+                <img src="{{ product.product_image.url }}" class="img-fluid rounded" alt="สินค้า">
+            {% else %}
+                <img src="/static/default-image.jpg" class="img-fluid rounded" alt="สินค้า">
+            {% endif %}
+        </div>
+
+        <!-- รายละเอียดสินค้า -->
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-start">
+                <h2>{{ product.product_name }}</h2>
+
+                {% if can_save %}
+                    <form method="post" action="{% url 'toggle_save_product' product.product_id %}" class="bookmark-form">
+                        {% csrf_token %}
+                        <button type="submit" class="bookmark-button">
+                            {% if saved %}
+                                <i class="fa fa-bookmark text-success fa-2x"></i>
+                            {% else %}
+                                <i class="fa fa-bookmark-o text-secondary fa-2x"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <!-- ราคา -->
+            <p class="mt-3 price">
+                <strong>ราคา:</strong>
+                {% if product.original_price %}
+                    <span class="original-price">{{ product.original_price }} บาท</span>
+                {% endif %}
+                <span class="sale-price">{{ product.product_price }} บาท</span>
+            </p>
+            {% if product.start_time %}
+                <p class="text-muted"><strong>เริ่มขาย:</strong> {{ product.start_time|date:"d/m/Y เวลา H:i" }} น.</p>
+            {% endif %}
+            {% if product.end_time %}
+                <p class="text-muted"><strong>สิ้นสุด:</strong> {{ product.end_time|date:"d/m/Y" }} </p>
+            {% endif %}
+
+            <p><strong>ร้านค้า:</strong> {{ product.store_owner.store_name }}</p>
+
+            <!-- แผนที่ Google Maps -->
+            <div class="mt-4">
+                <iframe
+                    width="100%"
+                    height="250"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q={{ product.store_owner.latitude }},{{ product.store_owner.longitude }}&output=embed">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- รายละเอียดสินค้า (ย้ายออกมาไว้ด้านล่าง) -->
+    {% if product.product_details and product.product_details != "-" %}
+        <div class="product-details-section mt-4">
+            <i class="fa fa-info-circle"></i>
+            <div>
+                <strong>รายละเอียดสินค้า:</strong><br>
+                {{ product.product_details }}
+            </div>
+        </div>
+    {% endif %}
+</div>
+<script>
+// ปิด scroll และชดเชยความกว้าง scrollbar
+function disableScroll() {
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.setProperty('--scrollbar-compensate', `${scrollBarWidth}px`);
+    document.body.classList.add("scroll-compensate");
+}
+
+// เปิด scroll และลบการชดเชย
+function enableScroll() {
+    document.body.classList.remove("scroll-compensate");
+    document.body.style.removeProperty('--scrollbar-compensate');
+}
+
+// ฟังก์ชันแสดงหน้าต่างยืนยันการออกจากระบบ
+function showLogoutConfirmation(event) {
+    event.preventDefault(); // ป้องกันการคลิกลิงก์ปกติ
+    disableScroll();
+
+    // แสดงหน้าต่างยืนยันจาก SweetAlert2
+    Swal.fire({
+        title: 'คุณแน่ใจหรือไม่?',
+        text: "คุณต้องการออกจากระบบใช่หรือไม่?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ออกจากระบบ',
+        cancelButtonText: 'ยกเลิก',
+        reverseButtons: true
+    }).then((result) => {
+        enableScroll(); // เปิด scroll กลับเมื่อปิด SweetAlert
+
+        if (result.isConfirmed) {
+            // หากผู้ใช้กดยืนยันให้ดำเนินการออกจากระบบ
+            window.location.href = '/logout/';  // เปลี่ยนเส้นทางไปยัง URL สำหรับออกจากระบบ
+        }
+    });
+}
+
+// เรียกใช้เมื่อหน้าโหลด
+document.addEventListener('DOMContentLoaded', function () {
+    {% for message in messages %}
+    disableScroll();
+    Swal.fire({
+        title: '{{ message }}',
+        icon: 'success',
+        timer: 2000,  // นับถอยหลัง 2 วินาที (2000 มิลลิวินาที)
+        timerProgressBar: true,
+        showConfirmButton: false
+    }).then(() => {
+        enableScroll(); // เปิด scroll กลับเมื่อ SweetAlert จบ
+    });
+    {% endfor %}
+
+    updatePriceRange(); // เรียกใช้เมื่อหน้าโหลด
+});
+</script>
+</body>
+</html>

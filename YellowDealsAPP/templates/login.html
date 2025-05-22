@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Yellow Deals</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="icon" href="{% static 'images/logo4.png' %}" type="image/png">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            body {
+                background-color: #ffffff;
+                font-family: 'Arial', sans-serif;
+                background-image: url("{% static 'images/bg2.png' %}");
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+    
+        .top-bar {
+            background-color: #FFC107;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .right-icons a {
+            color: #212121;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 16px;
+        }
+
+        .top-bar .right-icons i {
+            margin-right: 5px;
+        }
+
+        @font-face {
+            font-family: 'Dancing_Script';
+            src: url('/static/fonts/DancingScript-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .website-name {
+            font-family: 'Dancing_Script', sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            color: #212121;
+        }
+
+        .website-name .logo {
+            height: 50px;
+            width: auto;
+        }
+        
+        .container {
+            max-width: 450px;
+            background-color: white;
+            padding: 30px;
+            border: 2px solid #000;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            left: 480px;
+            top: 30px;
+        }
+
+        
+
+/* ฟอร์มที่ใส่ข้อความ */
+h2 {
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ฟอร์มแต่ละกล่อง (ช่องกรอก) */
+.form-group {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+/* ช่องกรอก (ชื่อผู้ใช้/รหัสผ่าน) */
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #000;
+    border-radius: 50px; /* ขอบมน */
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+/* เปลี่ยนสีเมื่อมีการโฟกัสในช่องกรอก */
+.form-control:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+}
+
+/* ลิงก์ข้อความลืมรหัสผ่าน */
+a {
+    color: #FFC107;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+/* เปลี่ยนสีเมื่อ hover ลิงก์ */
+a:hover {
+    color:rgb(189, 145, 10);
+}
+
+/* ปุ่มเข้าสู่ระบบ */
+.btn-primary {
+    width: 50%;
+    padding: 10px 30px;
+    font-size: 18px;
+    background-color: #FFC107;
+    border-radius: 50px; /* ขอบมน */
+    border: 2px solid #000;
+    color:rgb(0, 0, 0);
+    transition: background-color 0.3s ease;
+    margin: 40px auto 0 auto; /* เพิ่มระยะห่างจากขอบบน 30px */
+    display: block; /* ให้เป็นบล็อกเพื่อให้ margin: auto ใช้ได้ */
+}
+
+/* เปลี่ยนสีปุ่มเมื่อ hover */
+.btn-primary:hover {
+    background-color:rgb(189, 145, 10);
+    color:rgb(0, 0, 0);
+}
+
+/* ข้อความสมัครสมาชิก */
+p.mt-3 {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* ปรับข้อความสมัครสมาชิกให้ดูดี */
+p.mt-3 a {
+    color:rgb(179, 161, 24);
+    text-decoration: none;
+}
+
+p.mt-3 a:hover {
+    color: #FFC107;
+}
+
+/* สำหรับข้อความแสดงลืมรหัสผ่าน */
+.position-relative a {
+    position: absolute;
+    right: 0;
+    top: -10px;
+    font-size: 0.85em;
+}
+
+/* Responsive สำหรับขนาดมือถือ */
+@media (max-width: 767px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
+    /* ซ่อนไอคอนลูกตาเริ่มต้น */
+    .eye-icon-wrapper {
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* เมื่อผู้ใช้กรอกข้อมูลในช่องรหัสผ่าน */
+    .password-input:valid + .eye-icon-wrapper {
+        display: block; /* แสดงไอคอนลูกตา */
+    }
+
+    </style>
+        <body>
+            <div class="top-bar">
+                <div class="website-name">
+                    Yellow Deals
+                </div>
+                <div class="right-icons">
+                    <a href="{% url 'home' %}"><i class="fa-solid fa-angles-left"></i> ย้อนกลับ </a>
+                    <a href="{% url 'registershop' %}"><i class="fa-solid fa-store"></i> ลงทะเบียนร้านค้า</a>
+                    <a href="{% url 'admin_secret' %}"><i class="fa-solid fa-user-shield"></i> Admin</a>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <h2>เข้าสู่ระบบ</h2>
+        
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+
+        <div class="form-group mb-3" style="position: relative;">
+            {{ form.password.label_tag }}
+            <a href="{% url 'password_reset' %}"
+            style="position: absolute; right: 10px; top: 0;
+                    font-size: 0.9em; color: rgb(255, 63, 5); text-decoration: none;">
+                ลืมรหัสผ่านใช่ไหม?
+            </a>
+            <div style="position: relative;">
+                {{ form.password }}
+                <span id="toggle-password" class="eye-icon-wrapper" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                    <i class="fa-solid fa-eye" id="eye-icon"></i>
+                </span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">ลงชื่อเข้าใช้</button>
+
+        <p class="mt-3 text-center" style="font-size: 1em;">
+            ยังไม่มีบัญชี? 
+            <a href="{% url 'register' %}" style="font-size: 1em;">ลงทะเบียนเลย</a>
+        </p>
+    </form>
+</div>
+
+        <script>
+            // ฟังก์ชันเพื่อเปิด/ปิดการแสดงรหัสผ่าน
+            document.getElementById('toggle-password').addEventListener('click', function() {
+                var passwordField = document.getElementById('password');
+                var eyeIcon = document.getElementById('eye-icon');
+        
+                // เปลี่ยนประเภทของ input จาก password เป็น text หรือกลับกัน
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');  // ใช้ไอคอนของตาที่ปิด
+                } else {
+                    passwordField.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');  // ใช้ไอคอนของตาที่เปิด
+                }
+            });
+        
+            // ตรวจสอบเมื่อช่องกรอกรหัสผ่านมีการกรอกข้อมูล
+            var passwordInput = document.querySelector('input[name="password"]');
+            var eyeIconWrapper = document.querySelector('.eye-icon-wrapper');
+        
+            passwordInput.addEventListener('input', function() {
+                if (passwordInput.value !== "") {
+                    eyeIconWrapper.style.display = 'block';  // แสดงไอคอน
+                } else {
+                    eyeIconWrapper.style.display = 'none';  // ซ่อนไอคอน
+                }
+            });
+              // ฟังก์ชันล้างค่าฟอร์มเมื่อรีเฟรชหน้า
+    window.onload = function() {
+        // ล้างค่าฟอร์มที่มีในหน้า
+        document.querySelector('form').reset();
+    };
+    {% if messages %}
+
+    {% for message in messages %}
+        Swal.fire({
+            icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+            title: "{{ message }}",
+            showConfirmButton: true,
+            confirmButtonText: 'ตกลง',
+        });
+    {% endfor %}
+{% endif %}
+        </script>
+    </body>
+</html>
