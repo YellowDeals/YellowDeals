@@ -73,7 +73,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'YellowDeals.wsgi.application'
 
 
-nv
+
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///{}'.format(BASE_DIR / 'db.sqlite3')  # default เป็น SQLite ถ้าไม่มี DATABASE_URL
