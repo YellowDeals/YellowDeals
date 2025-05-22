@@ -15,18 +15,16 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
-# BASE_DIR ตั้งค่าใหม่ให้เป็น Path แบบ pathlib
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# โหลดไฟล์ .env
 load_dotenv()
 
-# ตั้งค่าคีย์ลับและดีบักจาก .env
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key-if-not-set')
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# ALLOWED_HOSTS รับจาก .env แล้วแปลงเป็น list (แยกด้วย comma)
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
@@ -59,7 +57,7 @@ ROOT_URLCONF = 'YellowDeals.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # ใส่ถ้าต้องการเพิ่ม path template folder
+        'DIRS': [], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +73,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'YellowDeals.wsgi.application'
 
 
-# Database
-# ใช้ dj_database_url โหลด DATABASE_URL จาก .env
+nv
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///{}'.format(BASE_DIR / 'db.sqlite3')  # default เป็น SQLite ถ้าไม่มี DATABASE_URL
@@ -129,7 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-# Email (ตัวอย่างตั้งค่าแบบเดิม อาจดึงจาก .env เพิ่มได้)
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
