@@ -72,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'YellowDeals.wsgi.application'
 
-
+ALLOWED_HOSTS = ['https://yellowdeals01-xe5r.onrender.com']
 
 DATABASES = {
     'default': dj_database_url.config(
